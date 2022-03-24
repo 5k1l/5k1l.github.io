@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前言 准备手机root，打开调试模式，尽量尽量不要国产机器（产生一些奇奇怪怪的问题，我这里使用的是nexus 5， 6.0.1系统） 几条命令 12345678adb push android_server &#x2F;sdcard&#x2F;sumount -o remount,rw &#x2F;system #挂载system可读可写cp android_server &#x2F;system&#x2F;bin&#x2F;as #个人习惯，这样在环境变">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CISCN2018—爱加密过反调试的尝试">
+<meta property="og:url" content="http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言 准备手机root，打开调试模式，尽量尽量不要国产机器（产生一些奇奇怪怪的问题，我这里使用的是nexus 5， 6.0.1系统） 几条命令 12345678adb push android_server &#x2F;sdcard&#x2F;sumount -o remount,rw &#x2F;system #挂载system可读可写cp android_server &#x2F;system&#x2F;bin&#x2F;as #个人习惯，这样在环境变">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img.doutugou.net/2019/07/9e31678cgy1g4p7cpxb53j20k00f8mxw.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2020/01/15/lOgEv9.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/01/15/lOg2V0.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/01/15/lOgcbq.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/01/15/lO4KUI.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/01/15/lO4tbj.png">
+<meta property="og:image" content="https://s2.ax1x.com/2020/01/15/lObCLT.png">
+<meta property="article:published_time" content="2020-01-12T15:05:43.000Z">
+<meta property="article:modified_time" content="2022-03-22T08:10:06.489Z">
+<meta property="article:author" content="5k1l">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.doutugou.net/2019/07/9e31678cgy1g4p7cpxb53j20k00f8mxw.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon.ico" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+          
+        
+    
+    <!-- title -->
+    <title>CISCN2018—爱加密过反调试的尝试</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/lib/meslo-LG/styles.css">
+
+    
+<link rel="stylesheet" href="/lib/justified-gallery/justifiedGallery.min.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- rss -->
+    
+    
+    <!-- jquery -->
+    
+<script src="/lib/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+    <div class="banner">
+<!-- <div id="blogtitel" class="blogtitel">Hexo</div> -->
+<!-- <ul id="wrapper" class="wrapper">
+  <div class="sun">
+    <div class="star"></div>
+  </div>
+  <div class="mercury">
+    <div class="planet">
+      <div class="shadow"></div>
+    </div>
+  </div>
+  <div class="venus">
+    <div class="planet">
+      <div class="shadow"></div>
+    </div>
+  </div>
+  <div class="earth">
+    <div class="planet"><div class="shadow"></div></div>
+  </div>
+  <div class="mars">
+    <div class="planet"><div class="shadow"></div></div>
+  </div>
+  <div class="jupiter">
+    <div class="planet"><div class="shadow"></div></div>
+  </div>
+</ul> -->
+</div>
+
+    <div class="background">
+      
+        <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fa fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2020/12/16/cve-2020-0022/"><i class="fa fa-chevron-left" aria-hidden="true" onmouseover='$("#i-prev").toggle();' onmouseout='$("#i-prev").toggle();'></i></a></li>
+        
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up" aria-hidden="true" onmouseover='$("#i-top").toggle();' onmouseout='$("#i-top").toggle();'></i></a></li>
+        <li><a class="icon" href="#"><i class="fa fa-share-alt" aria-hidden="true" onmouseover='$("#i-share").toggle();' onmouseout='$("#i-share").toggle();' onclick='$("#share").toggle();return false;'></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/"><i class="fa fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&text=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&title=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&is_video=false&description=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CISCN2018—爱加密过反调试的尝试&body=Check out this article: http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/"><i class="fa fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&title=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&title=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&title=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&title=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&name=CISCN2018—爱加密过反调试的尝试&description="><i class="fa fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">2.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#init-initarray"><span class="toc-number">3.</span> <span class="toc-text">init initarray</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNI-Onload%E8%BF%9B%E5%85%A5%E4%B9%8B%E5%90%8E"><span class="toc-number">4.</span> <span class="toc-text">JNI_Onload进入之后</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%8A%9F%E6%88%AA%E5%9B%BE"><span class="toc-number">5.</span> <span class="toc-text">成功截图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+      
+      <div class="content index width mx-auto px2 my4">
+          
+          <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        CISCN2018—爱加密过反调试的尝试
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Hexo</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2020-01-12T15:05:43.000Z" itemprop="datePublished">2020-01-12</time>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><img src="https://img.doutugou.net/2019/07/9e31678cgy1g4p7cpxb53j20k00f8mxw.jpg" alt="img"></p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>手机root，打开调试模式，尽量尽量不要国产机器（产生一些奇奇怪怪的问题，我这里使用的是nexus 5， 6.0.1系统）</p>
+<p>几条命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">adb push android_server /sdcard/</span><br><span class="line">su</span><br><span class="line">mount -o remount,rw /system <span class="comment">#挂载system可读可写</span></span><br><span class="line">cp android_server /system/bin/as <span class="comment">#个人习惯，这样在环境变量目录里面了，直接as就能运行 还能避免对名字的检测</span></span><br><span class="line">as -p23947 <span class="comment">#端口直接紧跟-p</span></span><br><span class="line">adb forward tcp:23947 tcp:23947 <span class="comment">#端口转发 避免检测23946  本机 手机</span></span><br><span class="line">adb shell am start -D -n monkeylord.trygetflag/monkeylord.trygetflag.MainActivity <span class="comment">#需要打开monitor，自动转发到8700</span></span><br><span class="line">jdb -connect <span class="string">&quot;com.sun.jdi.SocketAttach:hostname=localhost,port=8700&quot;</span> <span class="comment">#附加之后执行</span></span><br></pre></td></tr></table></figure>
+
+<p>之后看到了参考文章中X加密那一篇文章，发现基本是同一款，就直接使用了文章中提供的样本</p>
+<h2 id="init-initarray"><a href="#init-initarray" class="headerlink" title="init initarray"></a>init initarray</h2><p>init 是一个函数</p>
+<p>initarray是一个数组，存放要运行的函数指针，进行反调试操作的有0x2c 0x2e对应的</p>
+<p>其运行实际都要早于JNI_OnLoad，这个壳子就在这里做了一些操作</p>
+<ol>
+<li>调用gettimeofday进行时间反调试</li>
+<li>status反调试，fopen fgets </li>
+<li>signal 注册 1 2 3</li>
+<li>hook _ZN3art3Dbg8GoActtivityEv</li>
+<li>可能还有其它的反调试，暂未发现</li>
+</ol>
+<p>1 参考别人文章，对于r0置0即可</p>
+<p>2 我的办法是先在fopen下断，看到打开了文件之后就在fgets段尾下断点，置r0为0，这样就不会进入判断了</p>
+<p>我大概跟了一下status这个反调试，大概流程是先获取时间，之后getpid，用sprintf构造字符串/proc/xxxx/status，打开，然后fgets获取文件内容，使用strtok分解字符，strncmp匹配TracerPid，atoi转整数验证</p>
+<p>3 signal反调试那个我按照参考文章中处理的，r1为要绑定的函数，置零即可，但是感觉好像</p>
+<p>4 前边这算是比较常规，一开始直接下断点就发现了，后来在JNI_Onload里边有个函数反调试，死活找不到，我甚至把libexec.so导入表里面的函数大部分都下了个断，还是没有找到为什么挂了，后来提前在dlopen中下了个断，发现会dlopen libart.so 然后还会获取_ZN3art3Dbg8GoActiveEv的地址，传进某个函数，感觉很奇怪，上网搜了一下，发现这个函数在附加后会自动调用，还搜到了一个讲hook这个函数来反调试的文章，然后尝试将得到的地址换成了exit</p>
+<p><img src="https://s2.ax1x.com/2020/01/15/lOgEv9.png" alt="img"></p>
+<p>我将其改成了exit函数，可以看到hook的效果</p>
+<p><img src="https://s2.ax1x.com/2020/01/15/lOg2V0.png" alt="hook之前"></p>
+<p><img src="https://s2.ax1x.com/2020/01/15/lOgcbq.png" alt="hook之后"></p>
+<p>后来继续跟下去发现ijm还hook了好多函数，这个hook函数参数大概如下</p>
+<p>r0 soname<br>r1 funcname<br>r2 replace func<br>r3 global  </p>
+<p>这样init 和initarray中的反调试就算过完了</p>
+<h2 id="JNI-Onload进入之后"><a href="#JNI-Onload进入之后" class="headerlink" title="JNI_Onload进入之后"></a>JNI_Onload进入之后</h2><p>JNI_Onload可以在libart.so的LoadNativeLibrary下个断点直接进入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.text:0024A782                 ADD             R1, PC  ; &quot;JNI_OnLoad&quot;</span><br><span class="line">.text:0024A784                 BLX             dlsym</span><br></pre></td></tr></table></figure>
+
+<p>这个之后跟几步就到了JNI_Onload</p>
+<p>提前吐槽几句，这个混淆是真的牛皮，根本就没法看，放几张流程图</p>
+<p><img src="https://s2.ax1x.com/2020/01/15/lO4KUI.png" alt="流程图1"></p>
+<p><img src="https://s2.ax1x.com/2020/01/15/lO4tbj.png" alt="普通函数流程图"></p>
+<p>下边这是字符串隐藏</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">debug089:B3AA3694 81 54       STRB            R1, [R0,R2]</span><br><span class="line">debug089:B3AA3696 07 4B       LDR             R3, &#x3D;0x94</span><br><span class="line">debug089:B3AA3698 9B 59       LDR             R3, [R3,R6]</span><br><span class="line">debug089:B3AA369A 07 49       LDR             R1, &#x3D;0xF4</span><br><span class="line">debug089:B3AA369C 89 59       LDR             R1, [R1,R6]</span><br><span class="line">debug089:B3AA369E C1 54       STRB            R1, [R0,R3]</span><br><span class="line">debug089:B3AA36A0 06 4B       LDR             R3, &#x3D;0xB8</span><br><span class="line">debug089:B3AA36A2 9B 59       LDR             R3, [R3,R6]</span><br><span class="line">debug089:B3AA36A4 06 49       LDR             R1, &#x3D;0x11C</span><br><span class="line">debug089:B3AA36A6 89 59       LDR             R1, [R1,R6]</span><br><span class="line">debug089:B3AA36A8 C1 54       STRB            R1, [R0,R3]</span><br><span class="line">debug089:B3AA36AA 06 4A       LDR             R2, &#x3D;0xDC</span><br><span class="line">debug089:B3AA36AC 92 59       LDR             R2, [R2,R6]</span><br><span class="line">debug089:B3AA36AE 18 D4       BMI             loc_B3AA36E2</span><br><span class="line">debug089:B3AA36B0 0A E0       B               loc_B3AA36C8</span><br></pre></td></tr></table></figure>
+
+<p>中间跟着各种跳，大跳小跳。</p>
+<p>在这里发现了这几个反调试（或者说是检测）</p>
+<ol>
+<li>gettimeofday之后pthread_create 一开始跟了，有一大堆汇编，后来的就直接跳过了，跳过也没发生啥异常</li>
+<li> isDebuggerConnected 这个是JNI层调用的</li>
+<li>再次打开status文件</li>
+<li>时间反调试？</li>
+<li>dexname 检测 dexhunter</li>
+<li>maps 检测 ？修改dex？</li>
+</ol>
+<p>1 我直接就跳过了</p>
+<p>2 断在_ZN3art3JNI24CallStaticBooleanMethodVEP7_JNIEnvP7_jclassP10_jmethodIDSt9__va_list，修改返回值</p>
+<p>3 上边提到了</p>
+<p>4 记得timeofday第一个参数置零啊</p>
+<p>5 我手机本身就不是dexhunter所以不用管</p>
+<p>6 我没有去管，直接f9</p>
+<h2 id="成功截图"><a href="#成功截图" class="headerlink" title="成功截图"></a>成功截图</h2><p><img src="https://s2.ax1x.com/2020/01/15/lObCLT.png"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://android.googlesource.com/platform/art/+/android-cts-5.0_r9/runtime/debugger.cc#734">android源码中对于GoActive的解释</a></p>
+<p><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-249684.htm">X加密-反调试-DumpDex-修复指令-重打包</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/CharlesSimonyi/article/details/91050233">Android逆向案例：干掉梆梆加固免费版的反调试检测</a></p>
+
+  </div>
+</article>
+
+
+
+      </div>
+      
+       <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-number">2.</span> <span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#init-initarray"><span class="toc-number">3.</span> <span class="toc-text">init initarray</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JNI-Onload%E8%BF%9B%E5%85%A5%E4%B9%8B%E5%90%8E"><span class="toc-number">4.</span> <span class="toc-text">JNI_Onload进入之后</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%8A%9F%E6%88%AA%E5%9B%BE"><span class="toc-number">5.</span> <span class="toc-text">成功截图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/"><i class="fa fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&text=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&title=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&is_video=false&description=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CISCN2018—爱加密过反调试的尝试&body=Check out this article: http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/"><i class="fa fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&title=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&title=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&title=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&title=CISCN2018—爱加密过反调试的尝试"><i class="fa fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/01/12/CISCN2018%E7%88%B1%E5%8A%A0%E5%AF%86%E8%BF%87%E5%8F%8D%E8%B0%83%E8%AF%95%E7%9A%84%E5%B0%9D%E8%AF%95/&name=CISCN2018—爱加密过反调试的尝试&description="><i class="fa fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+      <ul>
+        <li id="toc"><a class="icon" href="#" onclick='$("#toc-footer").toggle();return false;'><i class="fa fa-list fa-lg" aria-hidden="true"></i> TOC</a></li>
+        <li id="share"><a class="icon" href="#" onclick='$("#share-footer").toggle();return false;'><i class="fa fa-share-alt fa-lg" aria-hidden="true"></i> Share</a></li>
+        <li id="top" style="display:none"><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a></li>
+        <li id="menu"><a class="icon" href="#" onclick='$("#nav-footer").toggle();return false;'><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Menu</a></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+      
+      <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2022 5k1l
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+      
+<script src="/lib/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- Google Analytics -->
+
+<!-- Disqus Comments -->
+
+
+    </div>
+</body>
+</html>
